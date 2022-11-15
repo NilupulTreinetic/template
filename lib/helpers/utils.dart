@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../common/app_colors.dart';
 import '../common/widgets/snackbar_dialog.dart';
 
 class Utils {
@@ -52,16 +50,4 @@ class Utils {
 
   static getFormattedTime(String date) =>
       DateFormat("hh:mm a").format(DateTime.parse(date));
-
-  static Widget setPaginationLoadingIndicator({bool condition = false}) {
-    if (condition) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: Platform.isIOS ? 18.0 : 0),
-        child: LinearProgressIndicator(
-          color: AppColors.blueColor,
-        ),
-      );
-    }
-    return const SizedBox();
-  }
 }

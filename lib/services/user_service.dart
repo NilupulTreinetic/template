@@ -21,7 +21,7 @@ class UserService {
     Result result = Result();
     try {
       var net = CacheNetworkService(
-        url: URL.GET_USER_PROFILE,
+        url: URL.SIGN_UP,
         method: NetMethod.GET,
         isCacheEnable: isCacheEnable,
         // cacheDuration: CacheDuration.INIT_USER,

@@ -48,7 +48,7 @@ class CommonDialog {
                 padding: const EdgeInsets.only(bottom: 20, right: 20),
                 child: MainBtn(
                   lbl: onClickBtnText,
-                  bgColor: AppColors.blueColor,
+                  bgColor: AppColors.bgBlue,
                   onClick: onClick ?? () {},
                 ),
               ),

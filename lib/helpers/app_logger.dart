@@ -3,7 +3,7 @@
 class Log {
   static const bool _isShowDebug = true;
   static const bool _isInfoShow = true;
-  static const bool _isWarnShow = false;
+  static const bool _isWarnShow = true;
   static const bool _isErrShow = true;
 
   static void debug(String log) {

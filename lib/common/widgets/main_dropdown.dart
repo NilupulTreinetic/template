@@ -27,17 +27,16 @@ class MainDropDown<T> extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: AppColors.tfBGColor,
+        color: AppColors.bgBlue,
         border: Border.all(
-            color: isSelected ? AppColors.blueColor : Colors.transparent),
+            color: isSelected ? AppColors.bgBlue : Colors.transparent),
       ),
       child: DropdownButton<T>(
         borderRadius: BorderRadius.circular(8),
         underline: const SizedBox(),
         isExpanded: true,
-        icon: Icon(
+        icon: const Icon(
           Icons.keyboard_arrow_down_outlined,
-          color: AppColors.darkGrey,
         ),
         items: items.map((value) {
           var obj;

@@ -40,7 +40,7 @@ class TripCardShimmer extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-              color: AppColors.tfBGColor,
+              color: AppColors.bgBlue,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
