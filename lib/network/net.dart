@@ -13,10 +13,10 @@ enum NetMethod { GET, POST, DELETE, PUT, MULTIPART }
 
 class Net {
   String url;
-  Map<String, String> queryParam;
-  Map<String, String> pathParam;
-  Map<String, String> fields;
-  Map<String, String> imagePathList;
+  Map<String, String>? queryParam;
+  Map<String, String>? pathParam;
+  Map<String, String>? fields;
+  Map<String, String>? imagePathList;
   Map<String, String>? headers;
   String test;
   dynamic body;
@@ -29,10 +29,10 @@ class Net {
   Net({
     required this.url,
     required this.method,
-    this.queryParam = const {},
-    this.pathParam = const {},
-    this.fields = const {},
-    this.imagePathList = const {},
+    this.queryParam,
+    this.pathParam,
+    this.fields,
+    this.imagePathList,
     this.headers,
     this.test = "",
     this.excludeToken = false,
@@ -152,12 +152,12 @@ class Net {
 
     var request = http.MultipartRequest("POST", uri);
     request.headers.addAll(headers);
-
-    fields.forEach((key, value) {
+    fields ??= {};
+    fields!.forEach((key, value) {
       request.fields['$key'] = value;
     });
-
-    List<dynamic> data = imagePathList.entries.cast().toList();
+    imagePathList ??= {};
+    List<dynamic> data = imagePathList!.entries.cast().toList();
 
     for (var i = 0; i < data.length; i++) {
       http.MultipartFile multipartFile =
@@ -197,8 +197,9 @@ class Net {
 
   String getPathParameters(String netUrl) {
     String url = netUrl;
-    if (pathParam.isNotEmpty) {
-      pathParam.forEach((key, value) {
+    pathParam ??= {};
+    if (pathParam!.isNotEmpty) {
+      pathParam!.forEach((key, value) {
         url = url.replaceFirst(key, value);
         Log.debug("$key path param replaced");
       });
