@@ -1,4 +1,5 @@
 abstract class CacheService {
+  // service
   init(name);
 
   delete();
