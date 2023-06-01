@@ -245,4 +245,19 @@ class Net {
   Future<String> processUrl() async {
     return "${getPathParameters(url)}?${Uri(queryParameters: queryParam).query}";
   }
+
+
+  // recordError(http.Response response, Result result) async {
+  //   if (result.net != null) {
+  //     await FirebaseCrashlytics.instance
+  //         .setCustomKey(result.net!.url, response.body);
+
+  //     await FirebaseCrashlytics.instance
+  //         .log("${result.net!.url} --- ${response.body}");
+
+  //     await FirebaseCrashlytics.instance.recordError(
+  //         "SERVER ERROR ${response.statusCode}",
+  //         StackTrace.fromString(response.body));
+  //   }
+  // }
 }
