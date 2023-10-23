@@ -12,7 +12,7 @@ class ConnectivityManager {
   ConnectivityManager._internal();
 
   StreamSubscription? _subscription;
-  final Connectivity _connectivity = Connectivity();
+  Connectivity _connectivity = Connectivity();
 
   static Future<bool> connected() async {
     var connectivityResult = await (Connectivity().checkConnectivity());

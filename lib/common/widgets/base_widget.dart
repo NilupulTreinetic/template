@@ -1,10 +1,18 @@
 import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import '../../helpers/app_logger.dart';
 import '../../helpers/connectivity_manager.dart';
-import '../app_custom_size.dart';
-import '../custom_text_styles.dart';
+import '../../models/user.dart';
+import '../../network/net_result.dart';
+import '../../providers/chat_provider.dart';
+import '../../providers/user_provider.dart';
+import '../app/app_colors.dart';
+import '../app/app_const.dart';
+import '../app/app_custom_size.dart';
+import '../textStyles/custom_text_style.dart';
 
 class BaseWidget extends StatefulWidget {
   final Widget child;
@@ -43,6 +51,7 @@ class _BaseWidgetState extends State<BaseWidget> {
         }
         if (!internetAvailable) {
           Navigator.of(context).pop();
+          reconnectToChat();
         }
 
         internetAvailable = true;
@@ -55,6 +64,19 @@ class _BaseWidgetState extends State<BaseWidget> {
         });
       }
     });
+  }
+
+  reconnectToChat() async {
+    User? currentUser =
+        Provider.of<UserProvider>(context, listen: false).currentUser;
+    if (currentUser == null) return;
+    Result result = await Provider.of<ChatProvider>(context, listen: false)
+        .chatLogin(currentUser.email!);
+    if (result.exception == null) {
+      Provider.of<ChatProvider>(context, listen: false).getChatList();
+      Provider.of<ChatProvider>(context, listen: false)
+          .getAllUnreadMessageCount();
+    }
   }
 
   @override
@@ -94,7 +116,7 @@ class _BaseWidgetState extends State<BaseWidget> {
                       ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),
-                            color: Colors.grey,
+                            color: AppColors.introDialogBg,
                           ),
                           child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -119,8 +141,7 @@ class _BaseWidgetState extends State<BaseWidget> {
                                           TextSpan(
                                               text:
                                                   "It looks like you've lost your internet connection.\nTrying to reconnect, please wait a moment",
-                                              style: CustomTextStyles
-                                                  .bold14BlueStyle())
+                                              style: CustomTextStyle.h2())
                                         ]),
                                     textAlign: TextAlign.center,
                                   )
