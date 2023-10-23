@@ -1,7 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore: constant_identifier_names
 import 'dart:convert';
+import 'dart:io';
 import '../helpers/app_logger.dart';
+import '../helpers/local_storage.dart';
 import 'cache_network_service.dart';
 import 'net_exception.dart';
 import 'net_result.dart';
@@ -25,6 +27,7 @@ class Net {
   final int _retryMaxCount = 3;
   int _retryCount = 0;
   bool isRetryEnable = false;
+  static String? _TOKEN;
 
   Net({
     required this.url,
@@ -190,6 +193,16 @@ class Net {
 
   Future<Map<String, String>> getHeadersForRequest() async {
     headers ??= {};
+    if (_TOKEN != null || _TOKEN != "") {
+      Log.debug("token get from local");
+      _TOKEN = await LocalStorage().getUserToken();
+    }
+    if (_TOKEN != null &&
+        !headers!.containsKey(HttpHeaders.authorizationHeader) &&
+        !excludeToken) {
+      Log.debug("token set to headers");
+      headers!.putIfAbsent(HttpHeaders.authorizationHeader, () => _TOKEN ?? '');
+    }
     headers!.putIfAbsent("Content-Type", () => "application/json");
     headers!.putIfAbsent("Accept", () => "application/json");
     return headers!;
@@ -245,7 +258,6 @@ class Net {
   Future<String> processUrl() async {
     return "${getPathParameters(url)}?${Uri(queryParameters: queryParam).query}";
   }
-
 
   // recordError(http.Response response, Result result) async {
   //   if (result.net != null) {
