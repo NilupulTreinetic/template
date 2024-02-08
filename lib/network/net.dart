@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore: constant_identifier_names
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import '../helpers/app_logger.dart';
@@ -28,18 +29,19 @@ class Net {
   int _retryCount = 0;
   bool isRetryEnable = false;
   static String? _TOKEN;
+  Function(double progress)? onUploadProgress;
 
-  Net({
-    required this.url,
-    required this.method,
-    this.queryParam,
-    this.pathParam,
-    this.fields,
-    this.imagePathList,
-    this.headers,
-    this.test = "",
-    this.excludeToken = false,
-  });
+  Net(
+      {required this.url,
+      required this.method,
+      this.queryParam,
+      this.pathParam,
+      this.fields,
+      this.imagePathList,
+      this.headers,
+      this.test = "",
+      this.excludeToken = false,
+      this.onUploadProgress});
 
   Future<Result> perform() async {
     http.Response response;
@@ -153,8 +155,19 @@ class Net {
     Log.debug(
         "request - MULTIPART | url - $url_ | headers - ${headers.toString()}");
 
-    var request = http.MultipartRequest("POST", uri);
+    var request = _CustomMultiPartRequest(
+      "POST",
+      uri,
+      onProgress: (bytes, totalBytes) {
+        if (onUploadProgress != null) {
+          onUploadProgress!(bytes / totalBytes * 100);
+        }
+        Log.debug("Upload progress --- >>>>> ${bytes / totalBytes * 100}");
+      },
+    );
+
     request.headers.addAll(headers);
+
     fields ??= {};
     fields!.forEach((key, value) {
       request.fields['$key'] = value;
@@ -272,4 +285,34 @@ class Net {
   //         StackTrace.fromString(response.body));
   //   }
   // }
+}
+
+class _CustomMultiPartRequest extends http.MultipartRequest {
+  _CustomMultiPartRequest(
+    String method,
+    Uri url, {
+    required this.onProgress,
+  }) : super(method, url);
+
+  final void Function(int bytes, int totalBytes) onProgress;
+
+  @override
+  http.ByteStream finalize() {
+    final byteStream = super.finalize();
+
+    final total = contentLength;
+    int bytes = 0;
+
+    final t = StreamTransformer.fromHandlers(
+      handleData: (List<int> data, EventSink<List<int>> sink) {
+        bytes += data.length;
+        onProgress(bytes, total);
+        if (total >= bytes) {
+          sink.add(data);
+        }
+      },
+    );
+    final stream = byteStream.transform(t);
+    return http.ByteStream(stream);
+  }
 }

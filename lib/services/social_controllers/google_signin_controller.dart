@@ -1,53 +1,50 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-// import '../../helpers/app_logger.dart';
+class GoogleSignController {
+  static final GoogleSignController _singleton =
+      GoogleSignController._internal();
 
+  factory GoogleSignController() {
+    return _singleton;
+  }
 
-// class GoogleSignController {
-//   static final GoogleSignController _singleton =
-//       GoogleSignController._internal();
+  GoogleSignController._internal();
 
-//   factory GoogleSignController() {
-//     return _singleton;
-//   }
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'profile',
+      'openid',
+    ],
+  );
 
-//   GoogleSignController._internal();
+  Future<void> handleGoogleSignIn(
+      Function(String, String) onSuccess, Function(String) onFailed) async {
+    try {
+      await googleSignIn.signIn().then((result) {
+        result!.authentication.then((googleKey) {
+          onSuccess(googleKey.accessToken!, googleKey.idToken!);
+        }).catchError((err) {
+          print("google  err ${err}");
+          onFailed("Google login error");
+        });
+      }).catchError((err) {
+        print("google  err ${err}");
+        //onFailed(err);
+      });
+    } catch (error) {
+      print("google  err ${error}");
+      onFailed("Something went wrong");
+    }
+  }
 
-//   final GoogleSignIn googleSignIn = GoogleSignIn(
-//     scopes: [
-//       'email',
-//       'profile',
-//       'openid',
-//     ],
-//   );
+  void handleSignOut() async {
+    bool isGoogleLogged = await googleSignIn.isSignedIn();
 
-//   Future<void> handleGoogleSignIn(onSuccess, onFailed) async {
-//     try {
-//       await googleSignIn.signIn().then((result) {
-//         result.authentication.then((googleKey) {
-//           onSuccess(googleKey.accessToken, googleKey.idToken);
-//         }).catchError((err) {
-//           print("google  err ${err}");
-//           onFailed("Google login error");
-//         });
-//       }).catchError((err) {
-//         print("google  err ${err}");
-//         //onFailed(err);
-//       });
-//     } catch (error) {
-//       print("google  err ${error}");
-//       onFailed("Something went wrong");
-//     }
-//   }
-
-//   void handleSignOut() async {
-//     bool isGoogleLogged = await googleSignIn.isSignedIn();
-
-//     if (isGoogleLogged) {
-//       googleSignIn.disconnect().whenComplete(() {
-//         print("google logged out");
-//       });
-//     }
-//   }
-// }
+    if (isGoogleLogged) {
+      googleSignIn.disconnect().whenComplete(() {
+        print("google logged out");
+      });
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:template/screens/signin_screen.dart';
 
 /*
   This file included the routes that we used within the application.
@@ -13,7 +14,9 @@ import 'package:flutter/material.dart';
 
 */
 class AppRoutes {
-  static final Map<String, WidgetBuilder> _routes = {};
+  static final Map<String, WidgetBuilder> _routes = {
+    SignInScreen.routeName: (context) => const SignInScreen()
+  };
 
   static get routes => _routes;
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:template/common/app_colors.dart';
-import '../../helpers/enum.dart';
+import 'package:flutter/services.dart';
+import '../app_colors.dart';
+import '../app_custom_size.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final String labelText;
@@ -9,15 +10,24 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final TextInputType keyboardType;
   final bool isPassword;
-  final TextFieldType type;
   final TextInputAction textInputAction;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final bool? isObscure;
-  final void Function(String myString) onFieldSubmitted;
+  final void Function(String myString)? onFieldSubmitted;
   final TextEditingController textEditingController;
   final bool? isHighlighted;
   final ValueSetter<String>? onChanged;
   final bool readOnly;
+  final Function? validator;
+  final double? bottomPadding;
+  final int? maxLines;
+  final int? minLine;
+  final Function? onTap;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextStyle? fieldTextStyle;
+  final TextStyle? labelTextStyle;
+  final TextStyle? hintTextStyle;
+  final Color? fillColor;
 
   // ignore: use_key_in_widget_constructors
   const CustomTextFormField(
@@ -25,145 +35,84 @@ class CustomTextFormField extends StatefulWidget {
       required this.keyboardType,
       this.isPassword = false,
       this.textInputAction = TextInputAction.next,
-      required this.focusNode,
-      required this.onFieldSubmitted,
+      this.focusNode,
+      this.onFieldSubmitted,
       required this.textEditingController,
-      required this.type,
       required this.hintText,
       this.suffix,
       this.readOnly = false,
       this.isObscure,
       this.suffixIcon,
       this.isHighlighted,
-      this.onChanged});
+      this.onChanged,
+      this.bottomPadding = 16,
+      this.onTap,
+      this.validator,
+      this.maxLines = 1,
+      this.inputFormatters,
+      this.minLine = 1,
+      this.fieldTextStyle,
+      this.labelTextStyle,
+      this.hintTextStyle,
+      this.fillColor});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool? _isObscure;
-  @override
-  void initState() {
-    super.initState();
-    _isObscure = widget.isObscure ?? false;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.textEditingController,
-      focusNode: widget.focusNode,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      textInputAction: widget.textInputAction,
-      readOnly: widget.readOnly,
-      maxLength: widget.type == TextFieldType.PHONENUMBER ? 10 : 100,
-      style: const TextStyle(
-          fontSize: 22, color: Colors.black, fontWeight: FontWeight.w400),
-      decoration: InputDecoration(
-        suffix: widget.suffix,
-        suffixIcon: widget.type == TextFieldType.PASSWORD
-            ? IconButton(
-                icon: Icon(
-                  !_isObscure! ? Icons.visibility : Icons.visibility_off,
-                  color: const Color(0xFFD8D8D8),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isObscure = !_isObscure!;
-                  });
-                })
-            : widget.suffixIcon ?? const SizedBox(),
-        hintStyle: const TextStyle(
-            fontSize: 22,
-            color: Color(0xff848DA5),
-            fontWeight: FontWeight.w600),
-        hintText: widget.hintText,
-        counterText: "",
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        border: InputBorder.none,
-        filled: true,
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide(color: AppColors.bgBlue, width: 1.0)),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: const BorderSide(color: Color(0xFFD1D5DF), width: 1.0)),
-        errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: const BorderSide(color: Colors.red, width: 1.0)),
-        focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: const BorderSide(color: Colors.red, width: 1.0)),
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: CustomSize.getHeight(widget.bottomPadding!)),
+      child: TextFormField(
+        controller: widget.textEditingController,
+        focusNode: widget.focusNode,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        textInputAction: widget.textInputAction,
+        enableInteractiveSelection: true,
+        inputFormatters: widget.inputFormatters,
+        readOnly: widget.readOnly,
+        minLines: widget.minLine,
+        maxLines: widget.maxLines,
+        onTap: widget.onTap != null ? () => widget.onTap!() : null,
+        style: widget.fieldTextStyle,
+        decoration: InputDecoration(
+          suffix: widget.suffix,
+          hintText: widget.minLine == 1 ? null : widget.hintText,
+          suffixIcon: widget.suffixIcon,
+          labelText: widget.minLine! > 1 ? null : widget.labelText,
+          labelStyle: widget.labelTextStyle,
+          hintStyle: widget.hintTextStyle,
+          counterText: "",
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: widget.fillColor,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide:
+                  const BorderSide(color: Colors.transparent, width: 1.0)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide:
+                  const BorderSide(color: Colors.transparent, width: 1.0)),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Colors.red, width: 1.0)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Colors.red, width: 1.0)),
+        ),
+        obscureText: widget.isObscure ?? false,
+        onChanged: (val) =>
+            widget.onChanged != null ? widget.onChanged!(val) : () {},
+        validator:
+            widget.validator == null ? null : (text) => widget.validator!(text),
+        keyboardType: widget.keyboardType,
       ),
-      obscureText: _isObscure!,
-      onChanged: (val) =>
-          widget.onChanged != null ? widget.onChanged!(val) : () {},
-      validator: (String? value) {
-        switch (widget.type) {
-          case TextFieldType.NORMAL:
-            if (widget.labelText == "Group Number" ||
-                widget.labelText == "Middle Name") {
-              return null;
-            }
-            if (value!.isEmpty) {
-              return "${widget.labelText}is Required ";
-            }
-            break;
-          case TextFieldType.OPTIONAL:
-            return null;
-          case TextFieldType.EMAIL:
-            return validateEmail(value!);
-          case TextFieldType.PASSWORD:
-            return validatePassword(value!);
-          case TextFieldType.ZIPCODE:
-            return validateZipCode(value!);
-          case TextFieldType.PHONENUMBER:
-            if (value!.isEmpty) {
-              return "${widget.labelText} is required ";
-            } else if (value.length < 10) {
-              return "enter valid phone number";
-            }
-            break;
-
-          default:
-            return validatePassword(value!);
-        }
-      },
-      keyboardType: widget.keyboardType,
     );
   }
 }
-
-String? validateZipCode(String value) {
-  if (value.isEmpty || value.length > 5) {
-    return "Please enter valid ZIP Code,accepts only five digit number";
-  }
-  return null;
-}
-
-String? validateEmail(String value) {
-  var pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regex = RegExp(pattern);
-  if (!regex.hasMatch(value.trim())) {
-    return "Enter valid email";
-  }
-  return null;
-}
-
-String? validatePassword(String value) {
-  // var pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
-  // RegExp regExp = RegExp(pattern);
-  // if (!regExp.hasMatch(value)) {
-  //   return invalidPassword[index];
-  // }
-  if (value.length < 6) {
-    return "Enter valid password";
-  }
-  return null;
-}
-  // String formattedContactNumber =
-  //       phoneController.text.replaceFirst('0', '94').trim();
