@@ -63,6 +63,7 @@ dependencies:
   permission_handler: ^11.1.0
   path_provider: ^2.1.2
   flutter_native_image: ^0.0.6
+  dio: ^5.4.0
 
   # firebase
   firebase_crashlytics: ^3.0.10

@@ -6,9 +6,9 @@
 */
 
 class URL {
-  static String SERVER = "https://dev-getin-api.treinetic.xyz/api/v1.0";
+  static String SERVER = "PATH";
 
   static String SIGN_UP = "$SERVER/register";
 
-  static String COMPLETE_RIDE_BY_RIDE_ID = "$SERVER/ride/{rideId}/finish";
+  static String COMPLETE_RIDE_BY_RIDE_ID = "END_POINT";
 }

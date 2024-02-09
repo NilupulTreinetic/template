@@ -1,3 +1,4 @@
+import 'package:template/network/net_dio.dart' as dio;
 import 'net_exception.dart';
 import 'net.dart';
 
@@ -6,6 +7,7 @@ class Result<Type> {
   NetException? exception;
   int? statusCode;
   Net? net;
+  dio.Net? dioNet;
   bool isFromCache = false;
   String? token;
 
