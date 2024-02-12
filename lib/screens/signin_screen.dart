@@ -122,17 +122,17 @@ class _SignInScreenState extends State<SignInScreen> {
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {},
-                            child: const Text(
-                              "A",
-                              style: TextStyle(
-                                fontSize: 45,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
+                          // InkWell(
+                          //   onTap: () {},
+                          //   child: const Text(
+                          //     "A",
+                          //     style: TextStyle(
+                          //       fontSize: 45,
+                          //       color: Colors.white,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          // )
                         ],
                       ),
                       const SizedBox(
@@ -140,9 +140,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       MainBtn(
                         bgColor: Colors.blue,
-                        onClick: () {
-                          throw Exception();
-                        },
+                        onClick: () {},
                         lbl: "Sign In",
                         isLoading: isLoading,
                       ),

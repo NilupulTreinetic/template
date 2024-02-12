@@ -15,7 +15,7 @@ class FBSignController {
   void handleFBSignIn(onSuccess, onError) async {
     try {
       LoginResult result = await FacebookAuth.instance
-          .login(loginBehavior: LoginBehavior.webOnly);
+          .login(loginBehavior: LoginBehavior.nativeWithFallback);
       switch (result.status) {
         case LoginStatus.success:
           final AccessToken? accessToken = result.accessToken;
