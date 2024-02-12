@@ -66,6 +66,21 @@ android {
 
         }
     }
+
+flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            versionNameSuffix "-dev"
+            resValue "string", "app_name", "Appp Dev"
+        }
+        prod {
+            dimension "app"
+            applicationId "com.example.template"
+            resValue "string", "app_name", "App"          
+        }
+    }
 }
 
 flutter {

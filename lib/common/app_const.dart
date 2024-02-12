@@ -7,6 +7,9 @@ Ex- static const String SAMPLE_CONST = "";
 
 */
 
+import '../model/app_config.dart';
+
 class AppConst {
+  static AppEnvironment APP_ENVIRONMENT = AppEnvironment.dev;
   static const String SAMPLE_CONST = "";
 }

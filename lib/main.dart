@@ -1,17 +1,22 @@
 import 'dart:io';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:template/screens/signin_screen.dart';
 
+import 'common/app_const.dart';
 import 'common/app_providers.dart';
 import 'common/app_routes.dart';
 import 'helpers/navigation_service.dart';
+import 'model/app_config.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -22,30 +27,42 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() async {
+initHive() async {
+  var dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
+}
+
+Future<Widget> initializeApp(AppConfig appConfig) async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  runApp(const MyApp());
+  await initHive();
+  // FlutterNativeSplash.remove();
+
+  AppConst.APP_ENVIRONMENT = appConfig.flavor;
+
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+
+  return MainApp(appConfig, savedThemeMode);
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainApp extends StatelessWidget {
+  final AppConfig appConfig;
+  final AdaptiveThemeMode? savedThemeMode;
+  const MainApp(this.appConfig, this.savedThemeMode, {super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Sizer(builder:
         (BuildContext context, Orientation orientation, DeviceType deviceType) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
       return MultiProvider(
         providers: AppProviders.providers,
         child: MaterialApp(

@@ -61,6 +61,7 @@ dependencies:
   path_provider: ^2.1.2
   flutter_native_image: ^0.0.6
   dio: ^5.4.0
+  adaptive_theme: ^3.4.0
   
 
   # firebase
@@ -76,6 +77,22 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_native_splash: ^2.3.2 
+  # change your launcher icon
+  # flutter_launcher_icons: ^0.13.1
+
+# flutter_launcher_icons:
+#   android: true
+#   ios: true
+#   image_path: "lib/assets/images/app_icon.png"
+#   adaptive_icon_background: "#FFC700;"
+#   remove_alpha_ios: true  
+
+flutter_native_splash:
+  color: "#000000"
+  android: true
+  ios: true 
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
