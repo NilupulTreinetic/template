@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:template/common/app_icons.dart';
 import 'package:template/common/app_validation.dart';
+import 'package:template/services/push_notification/push_notificaton_service.dart';
 import 'package:template/services/social_controllers/google_signin_controller.dart';
 
 import '../common/app_custom_size.dart';
@@ -25,10 +25,13 @@ class _SignInScreenState extends State<SignInScreen> {
   bool isAutoValidateModeEnable = false;
   bool isLoading = false;
   bool pwObscureText = true;
+  PushNotificationService pushNotificationService = PushNotificationService();
 
   @override
   void initState() {
     super.initState();
+    pushNotificationService.requestNotificationPermission();
+    pushNotificationService.subscribeToUid("001");
   }
 
   @override
@@ -147,10 +150,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           InkWell(
                             onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, SelectUserTypeScreen.routeName);
+                              pushNotificationService.getPushNotification();
                             },
-                            child: Text(
+                            child: const Text(
                               "Sign Up",
                             ),
                           ),

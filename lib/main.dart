@@ -24,8 +24,8 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  await Firebase.initializeApp();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(const MyApp());
 }
 
