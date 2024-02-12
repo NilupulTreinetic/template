@@ -140,7 +140,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       MainBtn(
                         bgColor: Colors.blue,
-                        onClick: () {},
+                        onClick: () {
+                          throw Exception();
+                        },
                         lbl: "Sign In",
                         isLoading: isLoading,
                       ),
