@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import '../helpers/app_logger.dart';
 import '../helpers/local_storage.dart';
 import 'cache_network_service.dart';
@@ -272,19 +274,19 @@ class Net {
     return "${getPathParameters(url)}?${Uri(queryParameters: queryParam).query}";
   }
 
-  // recordError(http.Response response, Result result) async {
-  //   if (result.net != null) {
-  //     await FirebaseCrashlytics.instance
-  //         .setCustomKey(result.net!.url, response.body);
+  recordError(http.Response response, Result result) async {
+    if (result.net != null) {
+      await FirebaseCrashlytics.instance
+          .setCustomKey(result.net!.url, response.body);
 
-  //     await FirebaseCrashlytics.instance
-  //         .log("${result.net!.url} --- ${response.body}");
+      await FirebaseCrashlytics.instance
+          .log("${result.net!.url} --- ${response.body}");
 
-  //     await FirebaseCrashlytics.instance.recordError(
-  //         "SERVER ERROR ${response.statusCode}",
-  //         StackTrace.fromString(response.body));
-  //   }
-  // }
+      await FirebaseCrashlytics.instance.recordError(
+          "SERVER ERROR ${response.statusCode}",
+          StackTrace.fromString(response.body));
+    }
+  }
 }
 
 class _CustomMultiPartRequest extends http.MultipartRequest {
