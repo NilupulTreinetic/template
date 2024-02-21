@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:template/network/net_url.dart';
 
 import 'helpers/app_logger.dart';
-import 'main.dart';
+import 'app.dart';
 import 'model/app_config.dart';
 
 void main() async {

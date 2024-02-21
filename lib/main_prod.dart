@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:template/helpers/app_logger.dart';
-import 'package:template/main.dart';
+import 'package:template/app.dart';
 import 'package:template/model/app_config.dart';
 import 'package:template/network/net_url.dart';
 
